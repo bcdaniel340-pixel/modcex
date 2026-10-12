@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>MODCEX | Family Device Tracker</title>
+
+<style>
+:root {
+  --bg: #0b1120;
+  --panel: #141e30;
+  --border: #29364c;
+  --text: #f3f6fc;
+  --muted: #9eacc2;
+  --blue: #5b8cff;
+  --green: #42d392;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+header {
+  padding: 22px 18px;
+  background: #101827;
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo {
+  background: var(--blue);
+  color: white;
+  font-size: 23px;
+  font-weight: bold;
+  border-radius: 13px;
+  padding: 12px;
+}
+h1 { font-size: 21px; margin: 0 0 5px; letter-spacing: 2px; }
+.subtitle { color: var(--muted); font-size: 13px; }
+main { max-width: 1100px; margin: auto; padding: 20px 16px 45px; }
+.welcome { margin: 10px 0 22px; }
+.welcome h2 { font-size: 26px; margin: 0 0 8px; }
+.welcome p { color: var(--muted); margin: 0; line-height: 1.6; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+.stat, .panel, .device {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+.stat { padding: 16px; }
+.stat-label { color: var(--muted); font-size: 12px; }
+.stat-number { font-size: 27px; font-weight: bold; margin-top: 10px; }
+.layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.panel { padding: 18px; }
+.panel h3 { margin: 0 0 16px; font-size: 17px; }
+label {
+  display: block;
+  margin: 14px 0 7px;
+  font-size: 13px;
+  color: #d9e2f2;
+}
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: #0c1424;
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+input:focus, select:focus { border-color: var(--blue); }
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.primary {
+  width: 100%;
+  margin-top: 18px;
+  background: var(--blue);
+  color: white;
+}
+.device-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.device-heading h3 { margin: 0; }
+.device-list { display: grid; gap: 12px; }
+.device { padding: 15px; }
+.device-top { display: flex; gap: 12px; align-items: center; }
+.device-icon {
+  width: 47px;
+  height: 47px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #202f49;
+  font-size: 24px;
+}
+.device-name { font-weight: bold; overflow-wrap: anywhere; }
+.device-owner { color: var(--muted); font-size: 13px; margin-top: 5px; }
+.device-meta {
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  padding-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+.pill {
+  background: #26344a;
+  color: #c9d7ee;
+  border-radius: 30px;
+  padding: 6px 9px;
+  font-size: 11px;
+}
+.delete {
+  background: transparent;
+  border: 1px solid #694047;
+  color: #ff9999;
+  padding: 7px 10px;
+}
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 25px 15px;
+  text-align: center;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.notice {
+  margin-top: 18px;
+  padding: 13px;
+  background: #17263a;
+  border: 1px solid #2c4261;
+  border-radius: 11px;
+  color: #c7d7f0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+footer {
+  color: var(--muted);
+  text-align: center;
+  padding: 22px 15px;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .layout { grid-template-columns: 1fr; }
+  .stats { gap: 8px; }
+  .stat { padding: 12px 10px; }
+  .stat-number { font-size: 23px; }
+  .stat-label { font-size: 11px; }
+  .welcome h2 { font-size: 23px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">M</div>
+    <div>
+      <h1>MODCEX</h1>
+      <div class="subtitle">Family Device Tracker</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="welcome">
+    <h2>Welcome to MODCEX</h2>
+    <p>Your family device dashboard. Register and organize
+       your family's phones and tablets in one place.</p>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">Registered devices</div>
+      <div class="stat-number" id="totalCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Phones</div>
+      <div class="stat-number" id="phoneCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Tablets</div>
+      <div class="stat-number" id="tabletCount">0</div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <section class="panel">
+      <h3>＋ Register a device</h3>
+
+      <form id="deviceForm">
+        <label for="deviceName">Device name</label>
+        <input id="deviceName" maxlength="60"
+          placeholder="e.g. Daniel's Samsung" required>
+
+        <label for="deviceType">Device type</label>
+        <select id="deviceType" required>
+          <option value="Phone">Android phone</option>
+          <option value="Tablet">Tablet</option>
+          <option value="Other">Other device</option>
+        </select>
+
+        <label for="ownerName">Owner's name</label>
+        <input id="ownerName" maxlength="60"
+          placeholder="e.g. Daniel" required>
+
+        <label for="sharing">Permission status</label>
+        <select id="sharing" required>
+          <option value="Not confirmed">Not confirmed</option>
+          <option value="Permission given">Permission given</option>
+        </select>
+
+        <button class="primary" type="submit">Register device</button>
+      </form>
+
+      <div class="notice">
+        <strong>Privacy notice:</strong> MODCEX currently saves
+        device details in this browser only. It does not yet
+        provide live GPS tracking or app-usage monitoring.
+        Only register devices with their owners' permission.
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="device-heading">
+        <h3>Registered devices</h3>
+        <span class="pill" id="listCount">0 devices</span>
+      </div>
+      <div id="deviceList" class="device-list"></div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  MODCEX © 2026 · Family Device Management
+</footer>
+
+<script>
+const STORAGE_KEY = "modcex_family_devices_v1";
+const form = document.getElementById("deviceForm");
+const list = document.getElementById("deviceList");
+
+let devices = [];
+
+try {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  if (Array.isArray(saved)) devices = saved;
+} catch (error) {
+  devices = [];
+}
+
+function saveDevices() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(devices));
+    return true;
+  } catch (error) {
+    alert("Could not save data in this browser.");
+    return false;
+  }
+}
+
+function makeElement(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+function renderDevices() {
+  document.getElementById("totalCount").textContent = devices.length;
+  document.getElementById("phoneCount").textContent =
+    devices.filter(d => d.type === "Phone").length;
+  document.getElementById("tabletCount").textContent =
+    devices.filter(d => d.type === "Tablet").length;
+  document.getElementById("listCount").textContent =
+    devices.length + (devices.length === 1 ? " device" : " devices");
+
+  list.replaceChildren();
+
+  if (devices.length === 0) {
+    const empty = makeElement("div", "empty");
+    empty.append(
+      makeElement("div", "", "📱"),
+      makeElement("p", "", "No devices registered yet."),
+      makeElement("small", "", "Register your first device using the form.")
+    );
+    list.appendChild(empty);
+    return;
+  }
+
+  devices.forEach(device => {
+    const card = makeElement("article", "device");
+    const top = makeElement("div", "device-top");
+    const icon = makeElement(
+      "div", "device-icon",
+      device.type === "Tablet" ? "▣" : "▯"
+    );
+    const info = makeElement("div");
+    info.append(
+      makeElement("div", "device-name", device.name),
+      makeElement("div", "device-owner", "Owner: " + device.owner)
+    );
+    top.append(icon, info);
+
+    const meta = makeElement("div", "device-meta");
+    const type = makeElement("span", "pill", device.type);
+    const permission = makeElement("span", "pill", device.permission);
+    const remove = makeElement("button", "delete", "Remove");
+
+    remove.type = "button";
+    remove.addEventListener("click", () => {
+      if (!confirm("Remove " + device.name + " from MODCEX?")) return;
+
+      const previous = devices;
+      devices = devices.filter(d => d.id !== device.id);
+
+      if (saveDevices()) {
+        renderDevices();
+      } else {
+        devices = previous;
+      }
+    });
+
+    meta.append(type, permission, remove);
+    card.append(top, meta);
+    list.appendChild(card);
+  });
+}
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const device = {
+    id: Date.now().toString() + Math.random().toString(16).slice(2),
+    name: document.getElementById("deviceName").value.trim(),
+    type: document.getElementById("deviceType").value,
+    owner: document.getElementById("ownerName").value.trim(),
+    permission: document.getElementById("sharing").value
+  };
+
+  if (!device.name || !device.owner) {
+    alert("Please enter the device name and owner's name.");
+    return;
+  }
+
+  devices.unshift(device);
+
+  if (saveDevices()) {
+    renderDevices();
+    form.reset();
+    document.getElementById("deviceName").focus();
+  } else {
+    devices.shift();
+  }
+});
+
+renderDevices();
+</script>
+</body>
+</html>
